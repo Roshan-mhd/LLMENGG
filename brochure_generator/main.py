@@ -1,9 +1,4 @@
 
-# not complete
-
-
-
-
 from openai import OpenAI
 import os
 from dotenv import load_dotenv
@@ -11,7 +6,7 @@ from scrapper import contents , links
 import requests
 import json
 
-ollama = OpenAI(base_url=os.getenv("OLLAMA_API_URL"), api_key="ollama")
+ollama = OpenAI(base_url=os.getenv("OLLAMA_BASE_URL"), api_key="ollama")
 
 load_dotenv()
 #url = "https://en.wikipedia.org/wiki/World_War_I"
@@ -64,13 +59,33 @@ links_response = requests.post(
         },
         {
         "role": "user",
-        "content": link_user_prompt
+        "content":link_user_prompt
         }
     ],
     "reasoning": {"enabled": False}
   })
 )
-print(links_response.json()["choices"][0]["message"]["content"])
-#print(links_response.json())
+first_op = links_response.json()["choices"][0]["message"]["content"]
+#print("checkpoitnt 2")
+brochure_system_prompt = """
+You are an assistant that analyzes the contents of several relevant pages from a company website
+and creates a short brochure about the company for prospective customers, investors and recruits.
+Respond in markdown without code blocks.
+Include details of company culture, customers and careers/jobs if you have the information.
+"""
+user_prompt = f"""
+Here are the contents of its landing page and other relevant pages;
+use this information to build a short brochure of the company in markdown without code blocks.\n\n
 
+"""
 
+ollama_response = ollama.chat.completions.create(
+    model="llama3.2",
+    messages = [{
+        "role": "system",
+        "content": brochure_system_prompt
+    },{
+        "role": "user",
+        "content": user_prompt + first_op}])
+
+print(ollama_response.choices[0].message.content)

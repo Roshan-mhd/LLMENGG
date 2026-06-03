@@ -13,7 +13,7 @@ def contents(url):
         title = soup.title.string if soup.title else 'No Title Found'
         text = soup.find_all('p')
         text = ' '.join([p.get_text() for p in text])
-        return (text , title)[:2000]
+        return (text , title)[:200]
     except requests.exceptions.RequestException as e:
         print(f"Error fetching the URL: {e}")
         return None
@@ -24,7 +24,12 @@ def links(url):
             response.raise_for_status()
             soup = BeautifulSoup(response.text, 'html.parser')
             links = [a['href'] for a in soup.find_all('a', href=True)]
-            return links [:2000]
+            return links [:200]
         except requests.exceptions.RequestException as e:
             print(f"Error fetching the URL: {e}")
             return None
+        
+
+
+#test_url = "https://www.mi.com/in/?srsltid=AfmBOoqDtlPW6MSZ-hKSs7Oj7XcQmgB8jqXw0zP4Uq1OZyTJhpyQivRm"
+#print(links(test_url))
