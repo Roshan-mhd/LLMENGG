@@ -10,7 +10,9 @@ ollama = OpenAI(base_url=os.getenv("OLLAMA_BASE_URL"), api_key="ollama")
 
 load_dotenv()
 #url = "https://en.wikipedia.org/wiki/World_War_I"
-url = "https://www.mi.com/in/?srsltid=AfmBOoqDtlPW6MSZ-hKSs7Oj7XcQmgB8jqXw0zP4Uq1OZyTJhpyQivRm"
+#url = "https://www.mi.com/in/?srsltid=AfmBOoqDtlPW6MSZ-hKSs7Oj7XcQmgB8jqXw0zP4Uq1OZyTJhpyQivRm"
+
+url = input("Enter the URL of the company website you want to generate a brochure for: ")
 
 titles, text =contents(url)
 links = links(url)
