@@ -6,6 +6,8 @@ from scrapper import contents , links
 import requests
 import json
 
+from IPython.display import Markdown, display, update_display
+
 ollama = OpenAI(base_url=os.getenv("OLLAMA_BASE_URL"), api_key="ollama")
 
 load_dotenv()
@@ -88,6 +90,12 @@ ollama_response = ollama.chat.completions.create(
         "content": brochure_system_prompt
     },{
         "role": "user",
-        "content": user_prompt + first_op}])
+        "content": user_prompt + first_op}],
+        stream = True )
 
-print(ollama_response.choices[0].message.content)
+
+# typing effect for the response
+for chunk in ollama_response:
+    content = chunk.choices[0].delta.content or ""
+    print(content, end="", flush=True)
+  
